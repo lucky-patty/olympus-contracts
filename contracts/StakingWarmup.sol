@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.7.5;
 
-
 interface IERC20 {
-    function decimals() external view returns (uint8);
+  function decimals() external view returns (uint8);
+
   /**
    * @dev Returns the amount of tokens in existence.
    */
@@ -30,7 +30,10 @@ interface IERC20 {
    *
    * This value changes when {approve} or {transferFrom} are called.
    */
-  function allowance(address owner, address spender) external view returns (uint256);
+  function allowance(address owner, address spender)
+    external
+    view
+    returns (uint256);
 
   /**
    * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -57,7 +60,11 @@ interface IERC20 {
    *
    * Emits a {Transfer} event.
    */
-  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+  function transferFrom(
+    address sender,
+    address recipient,
+    uint256 amount
+  ) external returns (bool);
 
   /**
    * @dev Emitted when `value` tokens are moved from one account (`from`) to
@@ -75,19 +82,18 @@ interface IERC20 {
 }
 
 contract StakingWarmup {
+  address public immutable staking;
+  address public immutable sOHM;
 
-    address public immutable staking;
-    address public immutable sOHM;
+  constructor(address _staking, address _sOHM) {
+    require(_staking != address(0));
+    staking = _staking;
+    require(_sOHM != address(0));
+    sOHM = _sOHM;
+  }
 
-    constructor ( address _staking, address _sOHM ) {
-        require( _staking != address(0) );
-        staking = _staking;
-        require( _sOHM != address(0) );
-        sOHM = _sOHM;
-    }
-
-    function retrieve( address _staker, uint _amount ) external {
-        require( msg.sender == staking );
-        IERC20( sOHM ).transfer( _staker, _amount );
-    }
+  function retrieve(address _staker, uint256 _amount) external {
+    require(msg.sender == staking);
+    IERC20(sOHM).transfer(_staker, _amount);
+  }
 }

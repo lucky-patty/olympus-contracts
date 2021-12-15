@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.7.5;
 
-
 interface IERC20 {
-    function decimals() external view returns (uint8);
+  function decimals() external view returns (uint8);
+
   /**
    * @dev Returns the amount of tokens in existence.
    */
@@ -30,7 +30,10 @@ interface IERC20 {
    *
    * This value changes when {approve} or {transferFrom} are called.
    */
-  function allowance(address owner, address spender) external view returns (uint256);
+  function allowance(address owner, address spender)
+    external
+    view
+    returns (uint256);
 
   /**
    * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -57,7 +60,11 @@ interface IERC20 {
    *
    * Emits a {Transfer} event.
    */
-  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+  function transferFrom(
+    address sender,
+    address recipient,
+    uint256 amount
+  ) external returns (bool);
 
   /**
    * @dev Emitted when `value` tokens are moved from one account (`from`) to
@@ -75,26 +82,26 @@ interface IERC20 {
 }
 
 interface IStaking {
-    function stake( uint _amount, address _recipient ) external returns ( bool );
-    function claim( address _recipient ) external;
+  function stake(uint256 _amount, address _recipient) external returns (bool);
+
+  function claim(address _recipient) external;
 }
 
 contract StakingHelper {
+  address public immutable staking;
+  address public immutable OHM;
 
-    address public immutable staking;
-    address public immutable OHM;
+  constructor(address _staking, address _OHM) {
+    require(_staking != address(0));
+    staking = _staking;
+    require(_OHM != address(0));
+    OHM = _OHM;
+  }
 
-    constructor ( address _staking, address _OHM ) {
-        require( _staking != address(0) );
-        staking = _staking;
-        require( _OHM != address(0) );
-        OHM = _OHM;
-    }
-
-    function stake( uint _amount ) external {
-        IERC20( OHM ).transferFrom( msg.sender, address(this), _amount );
-        IERC20( OHM ).approve( staking, _amount );
-        IStaking( staking ).stake( _amount, msg.sender );
-        IStaking( staking ).claim( msg.sender );
-    }
+  function stake(uint256 _amount) external {
+    IERC20(OHM).transferFrom(msg.sender, address(this), _amount);
+    IERC20(OHM).approve(staking, _amount);
+    IStaking(staking).stake(_amount, msg.sender);
+    IStaking(staking).claim(msg.sender);
+  }
 }
